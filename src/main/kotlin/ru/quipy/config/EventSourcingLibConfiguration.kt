@@ -13,7 +13,7 @@ import ru.quipy.logic.MyProjectAggregateState
 import ru.quipy.logic.ProjectAggregateState
 import ru.quipy.logic.TaskAggregateState
 import ru.quipy.logic.UserAggregateState
-import ru.quipy.projections.AnnotationBasedProjectEventsSubscriber
+import ru.quipy.projections.*
 import ru.quipy.streams.AggregateEventStreamManager
 import ru.quipy.streams.AggregateSubscriptionsManager
 import java.util.*
@@ -51,6 +51,15 @@ class EventSourcingLibConfiguration {
     private lateinit var projectEventSubscriber: AnnotationBasedProjectEventsSubscriber
 
     @Autowired
+    private lateinit var userEventSubscriber: AnnotationBasedUserEventsSubscriber
+
+    @Autowired
+    private lateinit var taskEventsSubscriber: AnnotationBasedTaskEventsSubscriber
+
+    @Autowired
+    private lateinit var myProjectEventSubscriber:  AnnotationBasedMyProjectEventsSubscriber
+
+    @Autowired
     private lateinit var eventSourcingServiceFactory: EventSourcingServiceFactory
 
     @Autowired
@@ -75,6 +84,9 @@ class EventSourcingLibConfiguration {
     fun init() {
         // Demonstrates how to explicitly subscribe the instance of annotation based subscriber to some stream. See the [AggregateSubscriptionsManager]
         subscriptionsManager.subscribe<ProjectAggregate>(projectEventSubscriber)
+        subscriptionsManager.subscribe<UserAggregate>(userEventSubscriber)
+        subscriptionsManager.subscribe<TaskAggregate>(taskEventsSubscriber)
+        subscriptionsManager.subscribe<MyProjectAggregate>(myProjectEventSubscriber)
 
         // Demonstrates how you can set up the listeners to the event stream
         eventStreamManager.maintenance {
