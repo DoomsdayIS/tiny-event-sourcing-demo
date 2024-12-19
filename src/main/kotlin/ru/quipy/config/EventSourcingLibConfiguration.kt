@@ -1,5 +1,4 @@
 package ru.quipy.config
-
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -60,6 +59,12 @@ class EventSourcingLibConfiguration {
     private lateinit var myProjectEventSubscriber:  AnnotationBasedMyProjectEventsSubscriber
 
     @Autowired
+    private lateinit var userProjectionSubscriber: UserProjectionSubscriber
+
+    @Autowired
+    private lateinit var taskProjectionSubscriber: TaskProjectionSubscriber
+
+    @Autowired
     private lateinit var eventSourcingServiceFactory: EventSourcingServiceFactory
 
     @Autowired
@@ -84,9 +89,10 @@ class EventSourcingLibConfiguration {
     fun init() {
         // Demonstrates how to explicitly subscribe the instance of annotation based subscriber to some stream. See the [AggregateSubscriptionsManager]
         subscriptionsManager.subscribe<ProjectAggregate>(projectEventSubscriber)
-        subscriptionsManager.subscribe<UserAggregate>(userEventSubscriber)
         subscriptionsManager.subscribe<TaskAggregate>(taskEventsSubscriber)
         subscriptionsManager.subscribe<MyProjectAggregate>(myProjectEventSubscriber)
+        subscriptionsManager.subscribe<UserAggregate>(userProjectionSubscriber)
+        subscriptionsManager.subscribe<TaskAggregate>(taskProjectionSubscriber)
 
         // Demonstrates how you can set up the listeners to the event stream
         eventStreamManager.maintenance {
